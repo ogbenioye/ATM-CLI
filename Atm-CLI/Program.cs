@@ -40,7 +40,7 @@ namespace Atm_CLI
                     Control.Withdraw(user);
                     break;
                 case "2":
-                    //checkBalance();
+                   Control.CheckBalance(user);
                     break;
                 case "3":
                     //depositMoney();
@@ -139,7 +139,6 @@ namespace Atm_CLI
                         Console.WriteLine("oops..Invalid option. Returning to Main Menu");
                         Program.Menu(user);
                         break;
-
                 }
             }
             user.Balance -= amount;
@@ -149,13 +148,14 @@ namespace Atm_CLI
             Console.Clear();
             Console.WriteLine("Transaction successful. Please, take your cash\n");
             Thread.Sleep(2000);
-            Console.WriteLine("Do you want to perform another transcation y/n");
+            Helper.AnotherTransaction(user);
+        }
 
-            var resp = Console.ReadLine();
-            if (resp.ToLower() == "n")
-                Helper.Exit();
-            else
-                Program.Menu(user);
+        public static void CheckBalance(User user)
+        {
+            Console.Clear();
+            Console.WriteLine("Your acoount balance is: ${0}\n", user.Balance);
+            Helper.AnotherTransaction(user);
         }
     }
 
@@ -178,6 +178,17 @@ namespace Atm_CLI
             Console.WriteLine("Thank you for banking with us! :)");
             Thread.Sleep(1000);
             Environment.Exit(0);
+        }
+
+        public static void AnotherTransaction(User user)
+        {
+            Console.WriteLine("Do you want to perform another transcation y/n");
+
+            var resp = Console.ReadLine();
+            if (resp.ToLower() == "n")
+                Helper.Exit();
+            else
+                Program.Menu(user);
         }
     }
 
@@ -202,10 +213,7 @@ namespace Atm_CLI
             {
                 return Response.Redirect;
             }
-
-            //Console.WriteLine("Error: In-correct login details");
-            return Response.Failed;
-            
+            return Response.Failed;    
         }
 
         public static User ValidateAccount(string acc)
