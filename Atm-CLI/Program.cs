@@ -67,8 +67,6 @@ namespace Atm_CLI
 
         public static void LandingPage()
         {
-            Response resp;
-
             Console.Write("Enter your account number: ");
             User user = User.ValidateAccount(Console.ReadLine());
 
@@ -76,11 +74,10 @@ namespace Atm_CLI
             Console.Clear();
             Console.WriteLine("Hello, {0}\n", user.FullName);
 
-            resp = User.Auth(user);
-            //pick it up from here. after inputting wrong pin numerous times, program breaks and logs-in eventually.
-            do
-                User.Auth(user);
-            while (resp == Response.Failed);
+            var resp = Response.Failed;
+
+            while (resp == Response.Failed)
+                resp = User.Auth(user);
 
             if (resp == Response.Success)
             {
@@ -164,11 +161,11 @@ namespace Atm_CLI
             } else if (input == "0")
             {
                 return Response.Redirect;
-            } else
-            {
-                //Console.WriteLine("Error: In-correct login details");
-                return Response.Failed;
             }
+
+            //Console.WriteLine("Error: In-correct login details");
+            return Response.Failed;
+            
         }
 
         public static User ValidateAccount(string acc)
