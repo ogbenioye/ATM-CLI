@@ -116,13 +116,14 @@ namespace Atm_CLI
         public static void Withdraw(User user)
         {
             Console.WriteLine("Enter an amount to withdraw");
+            Console.Write("$");
             var input = Console.ReadLine();
             _ = Decimal.TryParse(input, out var amount);
 
             if (amount > user.Balance)
             {
                 Console.Clear();
-                Console.WriteLine("Insufficient balance :(");
+                Console.WriteLine("Insufficient balance :(\n");
                 Console.WriteLine("1. Try again       2. Return to Menu");
 
                 var val = Console.ReadLine();
@@ -155,8 +156,6 @@ namespace Atm_CLI
                 Helper.Exit();
             else
                 Program.Menu(user);
-
-
         }
     }
 
