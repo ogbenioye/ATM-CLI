@@ -12,14 +12,14 @@ namespace Atm_CLI
         static void Main(string[] args)
         {
             LandingPage();
-            Menu();
+            //Menu();
             
 
 
 
         }
 
-        public static void Menu()
+        public static void Menu(User user)
         {
             Console.Clear();
 
@@ -37,7 +37,7 @@ namespace Atm_CLI
                     Helper.Exit();
                     break;
                 case "1":
-                    Control.Withdraw();
+                    Control.Withdraw(user);
                     break;
                 case "2":
                     //checkBalance();
@@ -59,7 +59,7 @@ namespace Atm_CLI
                     break;
                 default:
                     Console.WriteLine("Invalid input");
-                    Menu();
+                    Menu(user);
                     break;
                     
             }
@@ -85,7 +85,7 @@ namespace Atm_CLI
                 Console.WriteLine("Login successful");
                 
                 Thread.Sleep(2000);
-                Menu();
+                Menu(user);
             }
             else if (resp == Response.Redirect)
             {
@@ -113,17 +113,56 @@ namespace Atm_CLI
 
     class Control
     {
-        public static void Withdraw()
+        public static void Withdraw(User user)
         {
             Console.WriteLine("Enter an amount to withdraw");
             var input = Console.ReadLine();
+            _ = Decimal.TryParse(input, out var amount);
+
+            if (amount > user.Balance)
+            {
+                Console.Clear();
+                Console.WriteLine("Insufficient balance :(");
+                Console.WriteLine("1. Try again       2. Return to Menu");
+
+                var val = Console.ReadLine();
+                switch (val)
+                {
+                    case "1":
+                        Withdraw(user);
+                        break;
+                    case "2":
+                        Program.Menu(user);
+                        break;
+                    default:
+                        Console.WriteLine("oops..Invalid option. Returning to Main Menu");
+                        Program.Menu(user);
+                        break;
+
+                }
+            }
+            user.Balance -= amount;
+            Console.WriteLine("Processing transacetion..");
+            Thread.Sleep(2000);
+
+            Console.Clear();
+            Console.WriteLine("Transaction successful. Please, take your cash\n");
+            Thread.Sleep(2000);
+            Console.WriteLine("Do you want to perform another transcation y/n");
+
+            var resp = Console.ReadLine();
+            if (resp.ToLower() == "n")
+                Helper.Exit();
+            else
+                Program.Menu(user);
+
 
         }
     }
 
     class Helper
     {
-        public static void countdown(int time) {
+        public static void Countdown(int time) {
             
             for (int i = time; i > 0; i--)
             {
@@ -137,6 +176,8 @@ namespace Atm_CLI
 
         public static void Exit()
         {
+            Console.WriteLine("Thank you for banking with us! :)");
+            Thread.Sleep(1000);
             Environment.Exit(0);
         }
     }
@@ -205,7 +246,7 @@ namespace Atm_CLI
 
                 Console.ReadLine();
                 Console.WriteLine("Please wait while we re-direct you to the login page...");
-                Helper.countdown(3);
+                Helper.Countdown(3);
             }
 
             return user;
@@ -217,7 +258,7 @@ namespace Atm_CLI
     {
         public static Dictionary<string, User> users = new()
         {
-            { "2000", new User { FullName = "AKpabio Sultan", AccountNo = "2000", Pin = "1234" } },
+            { "2000", new User { FullName = "AKpabio Sultan", AccountNo = "2000", Pin = "1234", Balance = 2000} },
             {"2001", new User {FullName = "Janet Elopolo", AccountNo = "2001", Pin = "1424"} },
             { "2002", new User {FullName = "Denason Albert", AccountNo = "2003", Pin = "0310"} }
         };
