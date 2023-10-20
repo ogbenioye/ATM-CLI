@@ -46,7 +46,7 @@ namespace Atm_CLI
                     //depositMoney();
                         break;
                 case "4":
-                    //sendMoney();
+                    //Control.SendMoney(user);
                     break;
                 case "5":
                     //changePin();
