@@ -44,7 +44,7 @@ namespace Atm_CLI
                     break;
                 case "3":
                     //depositMoney();
-                        break;
+                    break;
                 case "4":
                     Control.SendMoney(user);
                     break;
@@ -87,16 +87,6 @@ namespace Atm_CLI
             else if (resp == Response.Redirect)
             {
                 Helper.Exit();
-                //Console.Write("Return to main menu? y/n");
-                //var input = Console.ReadLine();
-                //if (input.tolower() == "y")
-                //{
-                //    menu();
-                //}
-                //else if (input.tolower() == "n")
-                //{
-                //    user.auth(user);
-                //}
             }
             else
             {
