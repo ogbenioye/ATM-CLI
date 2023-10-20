@@ -27,7 +27,7 @@ namespace Atm_CLI
             Console.WriteLine("1. Withdrawal         2. Balance Enquiry");
             Console.WriteLine("3. Deposit            4. Transfer");
             Console.WriteLine("5. Change Pin         6. Pay a Bill");
-            Console.WriteLine("7. Create New Account  0. Exit");
+            Console.WriteLine("0. Exit");
 
             var input = Console.ReadLine();
 
@@ -46,16 +46,13 @@ namespace Atm_CLI
                     //depositMoney();
                         break;
                 case "4":
-                    //Control.SendMoney(user);
+                    Control.SendMoney(user);
                     break;
                 case "5":
                     //changePin();
                     break;
                 case "6":
                     //payBill();
-                    break;
-                case "7":
-                    Db.Create();
                     break;
                 default:
                     Console.WriteLine("Invalid input");
@@ -154,8 +151,35 @@ namespace Atm_CLI
         public static void CheckBalance(User user)
         {
             Console.Clear();
-            Console.WriteLine("Your acoount balance is: ${0}\n", user.Balance);
+            Console.WriteLine("Your account balance is: ${0}\n", user.Balance);
             Helper.AnotherTransaction(user);
+        }
+
+        public static void SendMoney(User user)
+        {
+            //send money only to the accounts we have in database
+        }
+
+        public static void RegisterUser()
+        {
+            Console.Clear();
+            Console.WriteLine("**Create a new account**\n");
+
+            User user = new();
+
+            Console.WriteLine("Enter your first and last name: ");
+            user.FullName = Console.ReadLine();
+            Console.Clear();
+
+            Console.WriteLine("Choose a 4-digit pin you can remember: ");
+            user.Pin = Console.ReadLine();
+
+            var keys = Db.users.OrderByDescending(user => Db.users.Keys).Last();
+            var accNo = (Int32.Parse(keys.Key) + 1).ToString();
+
+            user.AccountNo = accNo;
+
+            Db.Create(user);
         }
     }
 
@@ -243,7 +267,7 @@ namespace Atm_CLI
                         Program.LandingPage();
                         break;
                     case "yes":
-                        Db.Create();
+                        Control.RegisterUser();
                         break;
                     default:
                         Console.WriteLine("Error: Invalid Input!");
@@ -270,29 +294,11 @@ namespace Atm_CLI
             { "2002", new User {FullName = "Denason Albert", AccountNo = "2003", Pin = "0310"} }
         };
 
-        public static void Create()
-        {
-            Console.Clear();
-            Console.WriteLine("**Create a new account**\n");
-
-            User user = new();
-
-            Console.WriteLine("Enter your first and last name: ");
-            user.FullName = Console.ReadLine();
-            Console.Clear();
-
-            Console.WriteLine("Choose a 4-digit pin you can remember: ");
-            user.Pin = Console.ReadLine();
-
-            var keys = users.OrderByDescending(user => users.Keys).Last();
-            var accNo = (Int32.Parse(keys.Key) + 1).ToString();
-            user.AccountNo = accNo;
-
-            users.Add(accNo, user);
+        public static void Create(User user)
+        { users.Add(user.AccountNo, user);
 
             Console.Clear();
-            Console.WriteLine("Account created. Your new account number is {0}", accNo);
-            //Console.ReadLine();
+            Console.WriteLine("Account created. Your new account number is {0}", user.AccountNo);
         }
     }
 
