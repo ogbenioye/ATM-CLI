@@ -132,8 +132,8 @@ namespace Atm_CLI
                 }
             }
             user.Balance -= amount;
-            Console.WriteLine("Processing transaction..");
-            Thread.Sleep(2000);
+
+            Helper.ProcessTransaction();
 
             Console.Clear();
             Console.WriteLine("Transaction successful. Please, take your cash\n");
@@ -170,9 +170,7 @@ namespace Atm_CLI
 
                         user.Balance += Int32.Parse(amount);
 
-                        Console.Clear();
-                        Console.WriteLine("Processing transaction..");
-                        Thread.Sleep(2000);
+                        Helper.ProcessTransaction();
 
                         Console.Clear();
                         Console.WriteLine("Cash deposited successfully");
@@ -266,9 +264,7 @@ namespace Atm_CLI
 
             user.Balance -= transferAmount;
 
-            Console.Clear();
-            Console.WriteLine("Processing transaction..");
-            Thread.Sleep(2000);
+            Helper.ProcessTransaction();
 
             recipent.Balance += transferAmount;
 
@@ -332,6 +328,13 @@ namespace Atm_CLI
                 Helper.Exit();
             else
                 Program.Menu(user);
+        }
+
+        public static void ProcessTransaction()
+        {
+            Console.Clear();
+            Console.WriteLine("Processing transaction..");
+            Thread.Sleep(2000);
         }
     }
 
