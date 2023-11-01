@@ -148,7 +148,7 @@ namespace Atm_CLI
             Console.WriteLine("1. Deposit Cash    2. Deposit Checks");
             Console.WriteLine("3. Return to menu");
 
-            var input = Console.ReadLine();
+            var input = Console.ReadLine(); 
             switch (input)
             {
                 case "1":
@@ -176,12 +176,21 @@ namespace Atm_CLI
                     }
                     break;
                 case "2":
+                    if (user.RewardCount > 0)
+                    {
+                        Console.Clear();
+                        Console.WriteLine("Aha! You want my $20 again huh? No more for you. Bye!!");
+                        Console.ReadLine();
+                        DepositMoney(user);
+                    }
                     Console.Clear();
                     Console.WriteLine("oops! I'm only a CLI ATM not the real deal, my dev thought it would look good to add me :(");
-                    Console.WriteLine("Here's an extra $20 for your troubles :)");
+                    Console.WriteLine("Here's $20 for your trouble :)");
                     Console.ReadLine();
 
                     user.Balance += Int32.Parse("20");
+                    user.RewardCount++;
+
                     Helper.AnotherTransaction(user);
                     break;
                 case "3":
@@ -262,6 +271,7 @@ namespace Atm_CLI
         public string? AccountNo { get; set; }
         public string? Pin { get; set; }
         public Decimal Balance { get; set; }
+        public int RewardCount { get; set; }
 
         public static Response Auth(User user)
         {
@@ -329,7 +339,7 @@ namespace Atm_CLI
     {
         public static Dictionary<string, User> users = new()
         {
-            { "2000", new User { FullName = "AKpabio Sultan", AccountNo = "2000", Pin = "1234", Balance = 2000} },
+            { "2000", new User { FullName = "AKpabio Sultan", AccountNo = "2000", Pin = "1234", Balance = 2000, RewardCount = 0} },
             {"2001", new User {FullName = "Janet Elopolo", AccountNo = "2001", Pin = "1424"} },
             { "2002", new User {FullName = "Denason Albert", AccountNo = "2003", Pin = "0310"} }
         };
