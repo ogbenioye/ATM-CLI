@@ -13,10 +13,6 @@ namespace Atm_CLI
         {
             LandingPage();
             //Menu();
-            
-
-
-
         }
 
         public static void Menu(User user)
@@ -43,7 +39,7 @@ namespace Atm_CLI
                    Control.CheckBalance(user);
                     break;
                 case "3":
-                    //depositMoney();
+                    Control.DepositMoney(user);
                     break;
                 case "4":
                     Control.SendMoney(user);
@@ -129,7 +125,7 @@ namespace Atm_CLI
                 }
             }
             user.Balance -= amount;
-            Console.WriteLine("Processing transacetion..");
+            Console.WriteLine("Processing transaction..");
             Thread.Sleep(2000);
 
             Console.Clear();
@@ -143,6 +139,58 @@ namespace Atm_CLI
             Console.Clear();
             Console.WriteLine("Your account balance is: ${0}\n", user.Balance);
             Helper.AnotherTransaction(user);
+        }
+
+        public static void DepositMoney(User user)
+        {
+            Console.Clear();
+            Console.WriteLine("Please select an option");
+            Console.WriteLine("1. Deposit Cash    2. Deposit Checks");
+            Console.WriteLine("3. Return to menu");
+
+            var input = Console.ReadLine();
+            switch (input)
+            {
+                case "1":
+                    Console.Clear();
+                    Console.WriteLine("1. savings (xx{0})", user.AccountNo.Substring(2));
+                    if (Console.ReadLine() == "1")
+                    {
+                        Console.Clear();
+                        Console.WriteLine("How much do you want to deposit?");
+
+                        var amount = Console.ReadLine();
+
+                        user.Balance += Int32.Parse(amount);
+
+                        Console.Clear();
+                        Console.WriteLine("Processing transaction..");
+                        Thread.Sleep(2000);
+
+                        Console.Clear();
+                        Console.WriteLine("Cash deposited successfully");
+                        Helper.AnotherTransaction(user);
+                    } else
+                    {
+                        DepositMoney(user);
+                    }
+                    break;
+                case "2":
+                    Console.Clear();
+                    Console.WriteLine("oops! I'm only a CLI ATM not the real deal, my dev thought it would look good to add me :(");
+                    Console.WriteLine("Here's an extra $20 for your troubles :)");
+                    Console.ReadLine();
+
+                    user.Balance += Int32.Parse("20");
+                    Helper.AnotherTransaction(user);
+                    break;
+                case "3":
+                    Program.Menu(user);
+                    break;
+                default:
+                    DepositMoney(user);
+                    break;
+            }
         }
 
         public static void SendMoney(User user)
@@ -173,6 +221,7 @@ namespace Atm_CLI
         }
     }
 
+    //UTILS
     class Helper
     {
         public static void Countdown(int time) {
@@ -275,6 +324,7 @@ namespace Atm_CLI
 
     }
 
+    
     class Db
     {
         public static Dictionary<string, User> users = new()
