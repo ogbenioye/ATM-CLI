@@ -94,6 +94,7 @@ namespace Atm_CLI
 
     }
 
+    //CONTROLLER
     class Control
     {
         public static void Withdraw(User user)
@@ -341,6 +342,7 @@ namespace Atm_CLI
         }
     }
 
+    //USER ENTITY
     class User
     {
 
@@ -411,7 +413,7 @@ namespace Atm_CLI
 
     }
 
-    
+    //DATABASE
     class Db
     {
         public static Dictionary<string, User> users = new()
