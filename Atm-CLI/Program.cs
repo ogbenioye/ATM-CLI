@@ -98,6 +98,7 @@ namespace Atm_CLI
     {
         public static void Withdraw(User user)
         {
+            Console.Clear();
             Console.WriteLine("Enter an amount to withdraw");
             Console.Write("$");
             var input = Console.ReadLine();
@@ -165,6 +166,7 @@ namespace Atm_CLI
                     {
                         Console.Clear();
                         Console.WriteLine("How much do you want to deposit?");
+                        Console.Write("$");
 
                         var amount = Console.ReadLine();
 
@@ -235,6 +237,7 @@ namespace Atm_CLI
 
             Console.Clear();
             Console.WriteLine("How much do you want to send to {0}:", recipent.FullName.ToUpper());
+            Console.Write("$");
             var transferAmount = Int32.Parse(Console.ReadLine());
 
             Console.Clear();
