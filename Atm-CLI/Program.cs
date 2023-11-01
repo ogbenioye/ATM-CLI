@@ -21,7 +21,7 @@ namespace Atm_CLI
 
             Console.WriteLine("Hello! Select a transaction: ");
             Console.WriteLine("1. Withdrawal         2. Balance Enquiry");
-            Console.WriteLine("3. Deposit            4. Transfer");
+            Console.WriteLine("3. Deposit            4. Quick Transfer");
             Console.WriteLine("5. Change Pin         6. Pay a Bill");
             Console.WriteLine("0. Exit");
 
@@ -101,6 +101,13 @@ namespace Atm_CLI
             Console.WriteLine("Enter an amount to withdraw");
             Console.Write("$");
             var input = Console.ReadLine();
+            if (input == "" || input == "0")
+            {
+                Console.WriteLine("Invalid amount, try again.");
+                Thread.Sleep(2000);
+
+                Withdraw(user);
+            }
             _ = Decimal.TryParse(input, out var amount);
 
             if (amount > user.Balance)
@@ -204,7 +211,71 @@ namespace Atm_CLI
 
         public static void SendMoney(User user)
         {
-            //send money only to the accounts we have in database
+            Console.Clear();
+            Console.WriteLine("Enter recipent account number:");
+
+            var recipentAccNo = Console.ReadLine();
+            User recipent = new User();
+            try
+            {
+                recipent = Db.users[recipentAccNo];
+            } catch (Exception ex)
+            {
+                Console.Clear();
+                Console.WriteLine("Invalid account number. Try again.");
+                Thread.Sleep(1000);
+                SendMoney(user);
+            }
+
+            if (recipent == user)
+            {
+                Console.Clear();
+                Console.WriteLine("You cannot send money to yourself. Try again.");
+                Thread.Sleep(1000);
+                SendMoney(user);
+            }
+
+            Console.Clear();
+            Console.WriteLine("How much do you want to send to {0}:", recipent.FullName.ToUpper());
+            var transferAmount = Int32.Parse(Console.ReadLine());
+
+            Console.Clear();
+            Console.WriteLine("Transfer ${0}.00 to {1} from your current balance? Press ENTER to continue..", transferAmount, recipent.FullName.ToUpper());
+            Console.ReadLine();
+
+            if (transferAmount > user.Balance)
+            {
+                Console.Clear();
+                Console.WriteLine("Insufficient balance :(\n");
+                Console.WriteLine("1. Try again       2. Return to Menu");
+
+                var val = Console.ReadLine();
+                switch (val)
+                {
+                    case "1":
+                        SendMoney(user);
+                        break;
+                    case "2":
+                        Program.Menu(user);
+                        break;
+                    default:
+                        Program.Menu(user);
+                        break;
+                }
+            }
+
+            user.Balance -= transferAmount;
+
+            Console.Clear();
+            Console.WriteLine("Processing transaction..");
+            Thread.Sleep(2000);
+
+            recipent.Balance += transferAmount;
+
+            Console.Clear();
+            Console.WriteLine("Transaction Completed");
+
+            Helper.AnotherTransaction(user);
         }
 
         public static void RegisterUser()
