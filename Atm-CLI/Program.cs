@@ -13,7 +13,6 @@ namespace Atm_CLI
         {
             LandingPage();
             //Menu();
-            //fix error message when pin is wrong during login
             //option to cancel transfer process
         }
 
@@ -69,10 +68,17 @@ namespace Atm_CLI
             Console.Clear();
             Console.WriteLine("Hello, {0}\n", user.FullName);
 
-            var resp = Response.Failed;
+            //var resp = Response.Failed;
+            var resp = User.Auth(user);
 
             while (resp == Response.Failed)
+            {
+                Console.Clear();
+                Console.WriteLine("Invalid Pin!!\n");
+                Thread.Sleep(1000);
+                
                 resp = User.Auth(user);
+            }
 
             if (resp == Response.Success)
             {
