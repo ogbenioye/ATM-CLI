@@ -13,6 +13,8 @@ namespace Atm_CLI
         {
             LandingPage();
             //Menu();
+            //fix error message when pin is wrong during login
+            //option to cancel transfer process
         }
 
         public static void Menu(User user)
@@ -45,7 +47,7 @@ namespace Atm_CLI
                     Control.SendMoney(user);
                     break;
                 case "5":
-                    //changePin();
+                    Control.ChangePin(user);
                     break;
                 case "6":
                     //payBill();
@@ -299,6 +301,52 @@ namespace Atm_CLI
 
             Db.Create(user);
         }
+
+        public static void ChangePin(User user)
+        {
+            Console.Clear();
+            Console.WriteLine("Please enter your old pin:");
+            var oldPin = Console.ReadLine();
+
+            while (oldPin != user.Pin)
+            {
+                Console.Clear();
+                Console.WriteLine("ERROR: You have entered an incorrect pin");
+                Console.WriteLine("Enter Pin again:");
+                oldPin = Console.ReadLine();
+            }
+
+            Console.Clear();
+            Console.WriteLine("Enter new 4-digit Pin:");
+            var newPin = Console.ReadLine();
+
+            while (newPin.Length > 4 ||  newPin.Length < 4)
+            {
+                Console.Clear();
+                Console.WriteLine("ERROR: your pin must be 4 digits");
+                Console.WriteLine("Enter a four(4) digit pin:");
+                newPin = Console.ReadLine();
+            }
+
+            Console.Clear();
+            Console.WriteLine("Enter 4-digit pin again to confirm:");
+            var confirmPin = Console.ReadLine();
+
+            while (confirmPin != newPin)
+            {
+                Console.Clear();    
+                Console.WriteLine("ERROR: Pins do not match.");
+                Console.WriteLine("Confirm pin again: ");
+                confirmPin = Console.ReadLine();
+            }
+
+            User.ChangePin(newPin, user);
+
+            Console.WriteLine("Pin changed sucessfully");
+            Thread.Sleep(1000);
+
+            Helper.Countdown(3);
+        }
     }
 
     //UTILS
@@ -345,7 +393,6 @@ namespace Atm_CLI
     //USER ENTITY
     class User
     {
-
         public string? FullName { get; set; }
         public string? AccountNo { get; set; }
         public string? Pin { get; set; }
@@ -409,6 +456,11 @@ namespace Atm_CLI
             }
 
             return user;
+        }
+
+        public static void ChangePin(string newPin, User user)
+        {
+            user.Pin = newPin;
         }
 
     }
